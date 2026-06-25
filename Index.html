@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>S6N6FG6D TERMINAL</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap');
+
+  :root {
+    --bg:          #060606;
+    --surface:     #0d0d0a;
+    --border:      #1e1e16;
+    --dim:         #303028;
+    --muted:       #888878;
+    --text:        #deded0;
+    --bright:      #f2f2e0;
+    --accent:      #7fff00;
+    --accent-dim:  rgba(127,255,0,0.08);
+    --accent-border: rgba(127,255,0,0.55);
+    --accent-glow: rgba(127,255,0,0.22);
+    --red:         #ff3333;
+    --mono:        'VT323', monospace;
+    --mono2:       'Share Tech Mono', monospace;
+  }
+
+  body.mode-seedance {
+    --accent:        #ff2d9b;
+    --accent-dim:    rgba(255,45,155,0.08);
+    --accent-border: rgba(255,45,155,0.55);
+    --accent-glow:   rgba(255,45,155,0.22);
+  }
+
+  body.mode-kling {
+    --accent:        #cc44ff;
+    --accent-dim:    rgba(204,68,255,0.08);
+    --accent-border: rgba(204,68,255,0.55);
+    --accent-glow:   rgba(204,68,255,0.22);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 18px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+    transition: --accent 0.4s;
+  }
+
+  /* ── FILM GRAIN ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9997;
+    opacity: 0.065;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 150px 150px;
+    animation: grain 0.3s steps(1) infinite;
+  }
+
+  @keyframes grain {
+    0%   { background-position: 0 0; }
+    10%  { background-position: -25px 12px; }
+    20%  { background-position: 45px -35px; }
+    30%  { background-position: -55px 22px; }
+    40%  { background-position: 35px -15px; }
+    50%  { background-position: -15px 45px; }
+    60%  { background-position: 55px 5px; }
+    70%  { background-position: -35px -25px; }
+    80%  { background-position: 15px 35px; }
+    90%  { background-position: -45px 15px; }
+    100% { background-position: 0 0; }
+  }
+
+  /* ── CRT SCANLINES ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.16) 2px,
+      rgba(0,0,0,0.16) 4px
+    );
+  }
+
+  /* ── VHS TRACKING ROLL ── */
+  .tracking-roll {
+    position: fixed;
+    left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(0,0,0,0.28) 40%,
+      rgba(127,255,0,0.03) 50%,
+      rgba(0,0,0,0.28) 60%,
+      transparent
+    );
+    pointer-events: none;
+    z-index: 9999;
+    top: -60px;
+    animation: trackroll 9s linear infinite;
+  }
+
+  @keyframes trackroll {
+    0%   { top: -60px; }
+    100% { top: 100vh; }
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px 10px;
+    flex-shrink: 0;
+    background: var(--bg);
+  }
+
+  /* Logo with chromatic aberration */
+  .logo-wrap { position: relative; display: inline-block; margin-bottom: 10px; }
+
+  @keyframes flicker {
+    0%   { opacity: 1; }
+    3%   { opacity: 0.1; }
+    4%   { opacity: 1; }
+    8%   { opacity: 1; }
+    9%   { opacity: 0; }
+    10%  { opacity: 1; }
+    30%  { opacity: 1; }
+    31%  { opacity: 0.05; }
+    32%  { opacity: 1; }
+    33%  { opacity: 0.4; }
+    34%  { opacity: 1; }
+    60%  { opacity: 1; }
+    61%  { opacity: 0; }
+    62%  { opacity: 0.8; }
+    63%  { opacity: 0; }
+    64%  { opacity: 1; }
+    80%  { opacity: 1; }
+    81%  { opacity: 0.1; }
+    82%  { opacity: 1; }
+    100% { opacity: 1; }
+  }
+
+  .logo-main {
+    font-family: var(--mono);
+    font-size: 24px;
+    letter-spacing: 0.2em;
+    color: #7fff00;
+    text-shadow: 0 0 14px rgba(127,255,0,0.5);
+    position: relative;
+    transition: color 0.4s, text-shadow 0.4s;
+    display: block;
+    animation: flicker 3.5s infinite;
+  }
+
+  .logo-main::before {
+    content: attr(data-text);
+    position: absolute;
+    left: -2px; top: 0;
+    color: #ff2d9b;
+    opacity: 0.4;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    pointer-events: none;
+  }
+
+
+
+  /* ── MODEL SWITCHER (full width tabs) ── */
+  .switcher {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+    width: 100%;
+  }
+
+  .model-btn {
+    font-family: var(--mono);
+    font-size: 15px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 9px 4px;
+    border: 1px solid var(--dim);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.25s;
+    text-align: center;
+    line-height: 1.2;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .model-btn:active { opacity: 0.7; }
+
+  .model-btn.active {
+    border-color: var(--accent-border);
+    background: var(--accent-dim);
+    color: var(--accent);
+    box-shadow: 0 0 14px var(--accent-glow);
+    transition: all 0.4s;
+  }
+
+  /* ── ONBOARDING ── */
+  .onboarding {
+    background: var(--accent-dim);
+    border-bottom: 1px solid var(--accent-border);
+    padding: 10px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex-shrink: 0;
+    transition: background 0.4s, border-color 0.4s;
+  }
+
+  .onboarding-text {
+    font-family: var(--mono2);
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .onboarding-text strong { color: var(--bright); font-weight: normal; }
+
+  .onboarding-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 7px;
+  }
+
+  .btn-getkey {
+    font-family: var(--mono);
+    font-size: 16px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border: 1px solid var(--accent-border);
+    background: transparent;
+    color: var(--accent);
+    text-decoration: none;
+    display: inline-block;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+  }
+
+  .btn-dismiss {
+    font-family: var(--mono);
+    font-size: 20px;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  /* ── MAIN SCROLL AREA ── */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ── FIELDS ── */
+  .field-label {
+    font-family: var(--mono);
+    font-size: 18px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 7px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .field-label .req { color: var(--accent); font-size: 15px; transition: color 0.4s; }
+
+  /* Upload zones */
+  .upload-zone {
+    border: 1px dashed var(--dim);
+    background: var(--surface);
+    padding: 20px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    min-height: 80px;
+  }
+
+  .upload-zone:active {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .upload-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .upload-icon { font-size: 26px; color: var(--dim); margin-bottom: 7px; }
+
+  .upload-hint {
+    font-family: var(--mono2);
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .upload-preview {
+    width: 100%;
+    max-height: 180px;
+    object-fit: cover;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .upload-name {
+    font-family: var(--mono2);
+    font-size: 11px;
+    color: var(--accent);
+    word-break: break-all;
+    transition: color 0.4s;
+  }
+
+  /* Textarea */
+  textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--dim);
+    color: var(--bright);
+    font-family: var(--mono2);
+    font-size: 14px;
+    line-height: 1.65;
+    padding: 12px;
+    resize: vertical;
+    min-height: 90px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+
+  textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+
+  textarea::placeholder { color: var(--muted); }
+
+  /* Inputs / Selects */
+  select, input[type="number"], input[type="text"] {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--dim);
+    color: var(--bright);
+    font-family: var(--mono);
+    font-size: 18px;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+    min-height: 44px;
+  }
+
+  select:focus, input[type="number"]:focus, input[type="text"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+  }
+
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* API key */
+  .api-help {
+    font-family: var(--mono2);
+    font-size: 12px;
+    color: var(--text);
+    margin-top: 7px;
+    line-height: 1.6;
+  }
+
+  .api-help a { color: var(--accent); text-decoration: none; transition: color 0.4s; }
+
+  /* Sep */
+  .sep { border: none; border-top: 1px solid var(--border); }
+
+  /* Cost */
+  .cost-estimate {
+    font-family: var(--mono2);
+    font-size: 13px;
+    color: var(--text);
+    text-align: center;
+    padding: 2px 0;
+  }
+
+  .cost-estimate span { color: var(--accent); transition: color 0.4s; }
+
+  /* Run button */
+  .btn-run {
+    font-family: var(--mono);
+    font-size: 22px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 15px 20px;
+    border: 1px solid var(--accent-border);
+    background: var(--accent-dim);
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+    box-shadow: 0 0 18px var(--accent-glow);
+    min-height: 54px;
+  }
+
+  .btn-run:active:not(:disabled) {
+    box-shadow: 0 0 30px var(--accent-glow);
+  }
+
+  .btn-run:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-color: var(--dim);
+    color: var(--muted);
+    background: transparent;
+    box-shadow: none;
+  }
+
+  /* ── OUTPUT SECTION ── */
+  .output-section {
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg);
+  }
+
+  .output-header {
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .output-label {
+    font-family: var(--mono);
+    font-size: 18px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .status-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--dim);
+    flex-shrink: 0;
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+
+  .status-dot.idle    { background: var(--dim); }
+  .status-dot.running {
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+    animation: pulse 0.8s infinite;
+  }
+  .status-dot.done {
+    background: var(--accent);
+    box-shadow: 0 0 14px var(--accent-glow);
+  }
+  .status-dot.error { background: var(--red); box-shadow: 0 0 8px rgba(255,51,51,0.5); }
+
+  @keyframes pulse {
+    0%,100% { opacity:1; }
+    50%      { opacity:0.2; }
+  }
+
+  .status-text {
+    font-family: var(--mono);
+    font-size: 18px;
+    color: var(--text);
+  }
+
+  /* Log */
+  .log {
+    font-family: var(--mono2);
+    font-size: 12px;
+    line-height: 1.8;
+    padding: 12px 16px;
+    height: 110px;
+    overflow-y: auto;
+    background: #030303;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .log-line      { color: var(--muted); }
+  .log-line.info { color: var(--text); }
+  .log-line.ok   { color: var(--accent); text-shadow: 0 0 6px var(--accent-glow); transition: color 0.4s, text-shadow 0.4s; }
+  .log-line.warn { color: #ffb347; }
+  .log-line.err  { color: var(--red); }
+
+  /* Video output */
+  .output-video-wrap {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .output-empty {
+    font-family: var(--mono);
+    font-size: 20px;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+    text-align: center;
+    line-height: 2.2;
+    padding: 20px 0;
+  }
+
+  video {
+    width: 100%;
+    max-width: 100%;
+    background: #000;
+    border: 1px solid var(--border);
+    box-shadow: 0 0 30px rgba(0,0,0,0.7);
+    display: block;
+  }
+
+  .btn-dl {
+    font-family: var(--mono);
+    font-size: 20px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 10px 24px;
+    border: 1px solid var(--dim);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-dl:active {
+    border-color: var(--accent-border);
+    color: var(--accent);
+  }
+
+  .hidden { display: none !important; }
+
+  ::-webkit-scrollbar { width: 2px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--dim); }
+</style>
+</head>
+<body id="body" class="mode-seedance">
+
+<div class="tracking-roll"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-wrap">
+    <span class="logo-main" id="logo-main" data-text="⛧ S6N6FG6D TERMINAL">⛧ S6N6FG6D TERMINAL</span>
+  </div>
+  <div class="switcher">
+    <button class="model-btn active" data-mode="seedance" onclick="setMode('seedance')">SEEDANCE 2.0</button>
+    <button class="model-btn" data-mode="kling" onclick="setMode('kling')">KLING AVATAR</button>
+  </div>
+</header>
+
+<!-- ONBOARDING -->
+<div class="onboarding" id="onboarding">
+  <div style="flex:1">
+    <div class="onboarding-text">
+      <strong>Requires an Atlas Cloud API key.</strong>
+      Your key stays in your browser only — never sent to any server.
+      Generations billed to your Atlas Cloud account at pay-as-you-go rates.
+    </div>
+    <div class="onboarding-links">
+      <a class="btn-getkey" href="https://www.atlascloud.ai" target="_blank" rel="noopener">GET KEY ↗</a>
+    </div>
+  </div>
+  <button class="btn-dismiss" onclick="dismissOnboarding()">✕</button>
+</div>
+
+<!-- MAIN SCROLL -->
+<div class="main">
+
+  <!-- API KEY -->
+  <div>
+    <div class="field-label">API KEY <span class="req">*</span></div>
+    <input type="text" id="api-key" placeholder="ac_xxxxxxxxxxxxxxxx" autocomplete="off" inputmode="text">
+    <div class="api-help">
+      No account? <a href="https://www.atlascloud.ai" target="_blank" rel="noopener">atlascloud.ai ↗</a> — key never leaves your device.
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- IMAGE UPLOAD -->
+  <div>
+    <div class="field-label" id="image-label">REFERENCE IMAGE <span class="req">*</span></div>
+    <div class="upload-zone">
+      <input type="file" id="image-file" accept="image/*" onchange="handleImageFile(this)">
+      <div id="image-placeholder">
+        <div class="upload-icon">⬡</div>
+        <div class="upload-hint">Tap to select image<br>JPG · PNG · WEBP</div>
+      </div>
+      <div id="image-preview-wrap" class="hidden">
+        <img id="image-preview" class="upload-preview" src="" alt="">
+        <div class="upload-name" id="image-name"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GROK FIELDS -->
+  <div id="grok-fields">
+    <div style="margin-bottom:16px">
+      <div class="field-label">PROMPT <span class="req">*</span></div>
+      <textarea id="grok-prompt" placeholder="Slow push into a burning church window, phosphorescent smoke, 16mm grain..." rows="4"></textarea>
+    </div>
+    <div class="row-2" style="margin-bottom:10px">
+      <div>
+        <div class="field-label">DURATION (s)</div>
+        <input type="number" id="grok-duration" value="5" min="3" max="10" step="1" inputmode="numeric">
+      </div>
+      <div>
+        <div class="field-label">RESOLUTION</div>
+        <select id="grok-resolution">
+          <option value="480p">480p</option>
+          <option value="720p" selected>720p</option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <div class="field-label">ASPECT</div>
+      <select id="grok-aspect">
+        <option value="9:16">9:16 vertical</option>
+        <option value="16:9">16:9 wide</option>
+        <option value="1:1">1:1 square</option>
+        <option value="4:3">4:3</option>
+        <option value="3:4">3:4</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- SEEDANCE FIELDS -->
+  <div id="seedance-fields">
+    <div style="margin-bottom:16px">
+      <div class="field-label">PROMPT <span class="req">*</span></div>
+      <textarea id="seedance-prompt" placeholder="A hooded figure dissolves into static, cold green light, degraded tape..." rows="4"></textarea>
+    </div>
+    <div class="row-2" style="margin-bottom:10px">
+      <div>
+        <div class="field-label">DURATION (s)</div>
+        <input type="number" id="seedance-duration" value="5" min="4" max="15" step="1" inputmode="numeric">
+      </div>
+      <div>
+        <div class="field-label">RESOLUTION</div>
+        <select id="seedance-resolution">
+          <option value="720p" selected>720p</option>
+          <option value="1080p">1080p</option>
+        </select>
+      </div>
+    </div>
+    <div class="row-2">
+      <div>
+        <div class="field-label">ASPECT</div>
+        <select id="seedance-aspect">
+          <option value="9:16">9:16 vertical</option>
+          <option value="16:9">16:9 wide</option>
+          <option value="1:1">1:1 square</option>
+        </select>
+      </div>
+      <div>
+        <div class="field-label">FPS</div>
+        <select id="seedance-fps">
+          <option value="24" selected>24</option>
+          <option value="30">30</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- KLING FIELDS -->
+  <div id="kling-fields" class="hidden">
+    <div style="margin-bottom:16px">
+      <div class="field-label">AUDIO FILE <span class="req">*</span></div>
+      <div class="upload-zone">
+        <input type="file" id="audio-file" accept="audio/*" onchange="handleAudioFile(this)">
+        <div id="audio-placeholder">
+          <div class="upload-icon">◈</div>
+          <div class="upload-hint">Tap to select audio<br>MP3 · WAV · M4A · Min 5 sec</div>
+        </div>
+        <div id="audio-preview-wrap" class="hidden">
+          <audio id="audio-preview" controls style="width:100%;margin-bottom:8px;"></audio>
+          <div class="upload-name" id="audio-name"></div>
+          <div class="upload-name" id="audio-duration" style="color:#cc44ff;margin-top:5px;"></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="field-label">STYLE PROMPT <span style="color:var(--muted);font-size:15px">(optional)</span></div>
+      <textarea id="kling-prompt" placeholder="Cold inhuman delivery, minimal head movement, harsh fluorescent light..." rows="3"></textarea>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <div class="cost-estimate" id="cost-display">Estimated cost: <span>—</span></div>
+
+  <button class="btn-run" id="run-btn" onclick="runGeneration()">▸ TRANSMIT</button>
+
+</div>
+
+<!-- OUTPUT SECTION (bottom) -->
+<div class="output-section">
+
+  <div class="output-header">
+    <div class="status-dot idle" id="status-dot"></div>
+    <div class="output-label">OUTPUT</div>
+    <div class="status-text" id="status-text">IDLE</div>
+  </div>
+
+  <div class="log" id="log">
+    <div class="log-line">— S6N6FG6D TERMINAL ONLINE</div>
+    <div class="log-line">— late night gospel from the luminous rot</div>
+    <div class="log-line">— configure inputs and transmit</div>
+  </div>
+
+  <div class="output-video-wrap">
+    <div class="output-empty" id="output-empty">
+      NO SIGNAL<br>
+      <span style="font-size:16px;color:var(--dim)">transmission pending</span>
+    </div>
+    <video id="output-video" class="hidden" controls playsinline></video>
+    <a id="dl-btn" class="btn-dl hidden" href="#" download="s6n6fg6d-output.mp4">↓ EXTRACT</a>
+  </div>
+
+</div>
+
+<script>
+let currentMode = 'grok';
+let imageFileBlob = null;
+let audioFileBlob = null;
+let audioDurationSec = 0;
+let isRunning = false;
+
+const API_BASE = 'https://api.atlascloud.ai/api/v1';
+
+const MODELS = {
+  grok:     'xai/grok-imagine-video-v1.5/image-to-video',
+  seedance: 'bytedance/seedance-2.0/image-to-video',
+  kling:    'kwaivgi/kling-v2.6-pro/avatar'
+};
+
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.model-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.mode === mode)
+  );
+  document.getElementById('grok-fields').classList.toggle('hidden', mode !== 'grok');
+  document.getElementById('seedance-fields').classList.toggle('hidden', mode !== 'seedance');
+  document.getElementById('kling-fields').classList.toggle('hidden', mode !== 'kling');
+  document.getElementById('image-label').innerHTML = mode === 'kling'
+    ? 'PORTRAIT IMAGE <span class="req">*</span>'
+    : 'REFERENCE IMAGE <span class="req">*</span>';
+  const body = document.getElementById('body');
+  body.className = mode === 'seedance' ? 'mode-seedance' : mode === 'kling' ? 'mode-kling' : '';
+  updateCostEstimate();
+}
+
+function handleImageFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  imageFileBlob = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('image-preview').src = e.target.result;
+    document.getElementById('image-name').textContent = file.name;
+    document.getElementById('image-placeholder').classList.add('hidden');
+    document.getElementById('image-preview-wrap').classList.remove('hidden');
+  };
+  reader.readAsDataURL(file);
+  updateCostEstimate();
+}
+
+function handleAudioFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  audioFileBlob = file;
+  const url = URL.createObjectURL(file);
+  const audio = document.getElementById('audio-preview');
+  audio.src = url;
+  audio.onloadedmetadata = () => {
+    audioDurationSec = Math.ceil(audio.duration);
+    document.getElementById('audio-duration').textContent =
+      `Duration: ${audioDurationSec}s — billed: ${Math.max(audioDurationSec,5)}s`;
+    updateCostEstimate();
+  };
+  document.getElementById('audio-name').textContent = file.name;
+  document.getElementById('audio-placeholder').classList.add('hidden');
+  document.getElementById('audio-preview-wrap').classList.remove('hidden');
+}
+
+function updateCostEstimate() {
+  const el = document.getElementById('cost-display');
+  if (currentMode === 'grok') {
+    const dur = parseInt(document.getElementById('grok-duration').value) || 5;
+    el.innerHTML = `Estimated cost: <span>~$${(dur*0.096).toFixed(2)}</span> (${dur}s @ $0.096/sec)`;
+  } else if (currentMode === 'seedance') {
+    const dur = parseInt(document.getElementById('seedance-duration').value) || 5;
+    const res = document.getElementById('seedance-resolution').value;
+    const rate = res === '1080p' ? 0.224 : 0.112;
+    el.innerHTML = `Estimated cost: <span>~$${(dur*rate).toFixed(2)}</span> (${dur}s @ ${res})`;
+  } else {
+    const billed = Math.max(audioDurationSec||5,5);
+    el.innerHTML = `Estimated cost: <span>~$${(billed*0.112).toFixed(2)}</span> (${billed}s audio billed)`;
+  }
+}
+
+['grok-duration','seedance-duration'].forEach(id =>
+  document.getElementById(id).addEventListener('input', updateCostEstimate)
+);
+['grok-resolution','seedance-resolution'].forEach(id =>
+  document.getElementById(id).addEventListener('change', updateCostEstimate)
+);
+
+function log(msg, type='') {
+  const logEl = document.getElementById('log');
+  const line = document.createElement('div');
+  line.className = 'log-line' + (type ? ' '+type : '');
+  const ts = new Date().toLocaleTimeString('en-US',{hour12:false});
+  line.textContent = `[${ts}] ${msg}`;
+  logEl.appendChild(line);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+function setStatus(state, text) {
+  document.getElementById('status-dot').className = `status-dot ${state}`;
+  document.getElementById('status-text').textContent = text;
+}
+
+async function uploadFile(blob, apiKey) {
+  log(`Uploading ${blob.name||'file'}...`, 'info');
+  const fd = new FormData();
+  fd.append('file', blob);
+  const res = await fetch(`${API_BASE}/model/uploadMedia`, {
+    method:'POST',
+    headers:{'Authorization':`Bearer ${apiKey}`},
+    body:fd
+  });
+  const data = await res.json();
+  if (!data?.data?.download_url) throw new Error('Upload failed: '+JSON.stringify(data));
+  log('Upload complete.','ok');
+  return data.data.download_url;
+}
+
+async function pollPrediction(id, apiKey) {
+  const url = `${API_BASE}/model/prediction/${id}`;
+  let attempts = 0;
+  while (true) {
+    await new Promise(r=>setTimeout(r,3000));
+    attempts++;
+    const res = await fetch(url,{headers:{'Authorization':`Bearer ${apiKey}`}});
+    const data = await res.json();
+    const status = data?.data?.status;
+    if (attempts%5===0) log(`Processing... (${attempts*3}s elapsed)`,'info');
+    if (status==='completed'||status==='succeeded') return data.data.outputs[0];
+    if (status==='failed') throw new Error(data?.data?.error||'Generation failed');
+  }
+}
+
+async function runGeneration() {
+  if (isRunning) return;
+  const apiKey = document.getElementById('api-key').value.trim();
+  if (!apiKey)        { log('API key required.','err'); return; }
+  if (!imageFileBlob) { log('Image required.','err'); return; }
+  if (currentMode==='kling'&&!audioFileBlob) { log('Audio required for Kling Avatar.','err'); return; }
+
+  isRunning = true;
+  document.getElementById('run-btn').disabled = true;
+  document.getElementById('output-video').classList.add('hidden');
+  document.getElementById('dl-btn').classList.add('hidden');
+  document.getElementById('output-empty').classList.remove('hidden');
+  setStatus('running','TRANSMITTING');
+
+  // Scroll to output
+  document.querySelector('.output-section').scrollIntoView({behavior:'smooth'});
+
+  try {
+    const imgUrl = await uploadFile(imageFileBlob, apiKey);
+    let body = { model: MODELS[currentMode] };
+
+    if (currentMode==='grok') {
+      const aspect = document.getElementById('grok-aspect').value;
+      const [w,h] = aspect==='9:16'?[576,1024]:aspect==='16:9'?[1024,576]:aspect==='4:3'?[768,576]:aspect==='3:4'?[576,768]:[720,720];
+      body.image    = imgUrl;
+      body.prompt   = document.getElementById('grok-prompt').value.trim();
+      body.duration = parseInt(document.getElementById('grok-duration').value);
+      body.width=w; body.height=h;
+      log(`Firing Grok Imagine v1.5 — ${body.duration}s, ${aspect}`,'info');
+
+    } else if (currentMode==='seedance') {
+      const aspect = document.getElementById('seedance-aspect').value;
+      const [w,h] = aspect==='9:16'?[576,1024]:aspect==='16:9'?[1024,576]:[768,768];
+      body.image    = imgUrl;
+      body.prompt   = document.getElementById('seedance-prompt').value.trim();
+      body.duration = parseInt(document.getElementById('seedance-duration').value);
+      body.width=w; body.height=h;
+      body.fps      = parseInt(document.getElementById('seedance-fps').value);
+      log(`Firing Seedance 2.0 — ${body.duration}s, ${aspect}`,'info');
+
+    } else {
+      const audioUrl = await uploadFile(audioFileBlob, apiKey);
+      body.image = imgUrl;
+      body.audio = audioUrl;
+      const kp = document.getElementById('kling-prompt').value.trim();
+      if (kp) body.prompt = kp;
+      log(`Firing Kling v2.6 Pro Avatar — ${Math.max(audioDurationSec,5)}s billed`,'info');
+    }
+
+    const genRes  = await fetch(`${API_BASE}/model/generateVideo`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},
+      body:JSON.stringify(body)
+    });
+    const genData = await genRes.json();
+    const predId  = genData?.data?.id;
+    if (!predId) throw new Error('No prediction ID: '+JSON.stringify(genData));
+    log(`Signal locked — ID: ${predId}`,'ok');
+    log('Awaiting transmission...','info');
+
+    const videoUrl = await pollPrediction(predId, apiKey);
+    log('Transmission received.','ok');
+
+    const vid = document.getElementById('output-video');
+    vid.src = videoUrl;
+    vid.classList.remove('hidden');
+    document.getElementById('output-empty').classList.add('hidden');
+    document.getElementById('dl-btn').href = videoUrl;
+    document.getElementById('dl-btn').classList.remove('hidden');
+    setStatus('done','RECEIVED');
+
+  } catch(err) {
+    log(`SIGNAL LOST: ${err.message}`,'err');
+    setStatus('error','SIGNAL LOST');
+  } finally {
+    isRunning = false;
+    document.getElementById('run-btn').disabled = false;
+  }
+}
+
+function dismissOnboarding() {
+  const el = document.getElementById('onboarding');
+  if (el) el.style.display='none';
+  localStorage.setItem('s6_ob','1');
+}
+
+const savedKey = localStorage.getItem('s6_api_key');
+if (savedKey) document.getElementById('api-key').value = savedKey;
+document.getElementById('api-key').addEventListener('input', function() {
+  localStorage.setItem('s6_api_key', this.value);
+});
+if (localStorage.getItem('s6_ob')) {
+  const el = document.getElementById('onboarding');
+  if (el) el.style.display='none';
+}
+
+updateCostEstimate();
+</script>
+</body>
+</html>
